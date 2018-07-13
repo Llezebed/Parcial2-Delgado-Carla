@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./templates/template.xhtml">
+             <ui:define name="content">
+                <div>
+                  
+           
+        <p:growl id="mensajes" showDetail="true"/>
+        <p:panel id="pnlBtns" header="Inscripcion de alumnos">
+            <h:form id="frmIng">
+                <p:panelGrid columns="2">
+            <p:outputLabel for="txtNom" value="Nombre "/>
+            <p:inputText id="txtNom" value="#{altaAlumnosFormBean.nombre}"/>
+             <p:outputLabel for="txtAp" value="Apellido "/>
+             <p:inputText id="txtAp" value="#{altaAlumnosFormBean.apellido}"/>
+             <p:outputLabel for="txtDom" value="Domicilio "/>
+             <p:inputText id="txtDom" value="#{altaAlumnosFormBean.domicilio}" required="true"/>
+             <p:outputLabel for="txtDni" value="DNI "/>
+             <p:inputNumber id="txtDni" value="#{altaAlumnosFormBean.DNI}"/>
+              <p:outputLabel for="txtTel" value="Telefono "/>
+              <p:inputNumber id="txtTel" value="#{altaAlumnosFormBean.tel}"/>
+              <p:outputLabel for="Fech" value="Año de nacimiento "/>
+              <p:calendar id="Fech" showOn="button" value="#{altaAlumnosFormBean.fechaNac}" />
+               <p:outputLabel for="txtMat" value="Materia "/>
+               <p:selectOneMenu id="txtMat" value="#{altaAlumnosFormBean.unaMat}" converter="omnifaces.SelectItemsConverter">
+                   <f:selectItems value="#{altaAlumnosFormBean.listaMats.listaM}" 
+                                  var="mat" itemLabel="#{mat.denom}" itemValue="#{mat}"/>
+               </p:selectOneMenu>
+               <p:commandButton id="agrAl" ajax="false" value="Agregar" actionListener="#{altaAlumnosFormBean.cargarDatos()}" update="frmBtn"/>
+                    </p:panelGrid>   
+            </h:form>
+        </p:panel>
+        <p:panel id="pnlMostrarDat" header="Alumnos Inscriptos">
+            <h:form id="frmBtn">
+            <p:dataTable id="tblMos" value="#{altaAlumnosFormBean.listaInsc.listaI}" var="cadaAl">
+                <p:column headerText="Cod Alumno">
+                    <p:outputLabel value="#{cadaAl.cod}"/>
+                </p:column>
+                      <p:column headerText="Nombre">
+                          <p:outputLabel value="#{cadaAl.alumno.nombre}"/>
+                    </p:column>
+                     <p:column headerText="Apellido">
+                         <p:outputLabel value="#{cadaAl.alumno.apellido}"/>
+                    </p:column>
+                     <p:column headerText="DNI">
+                         <p:outputLabel value="#{cadaAl.alumno.DNI}"/>
+                    </p:column>
+                     <p:column headerText="Domicilio">
+                         <p:outputLabel value="#{cadaAl.alumno.domicilio}"/>
+                    </p:column>
+                     <p:column headerText="Telefono">
+                         <p:outputLabel value="#{cadaAl.alumno.tel}"/>
+                    </p:column>
+                     <p:column headerText="Fecha de Nacimiento">
+                         <p:outputLabel value="#{cadaAl.alumno.fechaNac}">
+                          <f:convertDateTime pattern="dd/MM/yyyy"/>
+                         </p:outputLabel>
+                           </p:column> 
+                       <p:column headerText="Codigo">
+                           <p:outputLabel value="#{cadaAl.materia.cod}"/>
+                   
+                    </p:column>
+                     <p:column headerText="Carrera">
+                         <p:outputLabel value="#{cadaAl.materia.carrera}"/>
+                    </p:column>
+                     <p:column headerText="Denominacion">
+                         <p:outputLabel value="#{cadaAl.materia.denom}"/>
+                    </p:column>
+                   
+                    <p:column headerText="Año cursado">
+                        <p:outputLabel value="#{cadaAl.materia.añoCur}"/>
+                    </p:column>
+                    <p:column headerText="Edición">
+                            <p:commandButton icon="ui-icon-pencil" oncomplete="PF('modificar').show()" 
+                                             update=":frmModificar" 
+                                             actionListener="#{altaAlumnosFormBean.estableceraAl(cadaAl)}"/>
+                            <p:commandButton icon="ui-icon-trash" oncomplete="PF('eliminar').show()" 
+                                             update=":frmEliminar" 
+                                             actionListener="#{altaAlumnosFormBean.estableceraAl(cadaAl)}"/>
+                        </p:column>
+
+                
+                
+            </p:dataTable>
+                </h:form>
+        </p:panel>
+       
+                   
+      
+           <p:dialog id="dlgModificar" widgetVar="modificar" header="Modificación de Perfil del ALumno" resizable="false" 
+                  showEffect="explode" hideEffect="explode" modal="true">
+            <h:form id="frmModificar">
+                <p:panelGrid columns="2">
+            <p:outputLabel for="txtNom" value="Nombre "/>
+            <p:inputText id="txtNom" value="#{altaAlumnosFormBean.alIn.alumno.nombre}"/>
+             <p:outputLabel for="txtAp" value="Apellido "/>
+             <p:inputText id="txtAp" value="#{altaAlumnosFormBean.alIn.alumno.apellido}"/>
+             <p:outputLabel for="txtDom" value="Domicilio "/>
+             <p:inputText id="txtDom" value="#{altaAlumnosFormBean.alIn.alumno.domicilio}" required="true"/>
+             <p:outputLabel for="txtDni" value="DNI "/>
+             <p:inputNumber id="txtDni" value="#{altaAlumnosFormBean.alIn.alumno.DNI}"/>
+             <p:outputLabel for="txtTel" value="Telefono "/>
+             <p:inputNumber id="txtTel" value="#{altaAlumnosFormBean.alIn.alumno.tel}"/>
+              <p:outputLabel for="Fech" value="Año de nacimiento "/>
+              <p:calendar id="Fech" showOn="button" value="#{altaAlumnosFormBean.alIn.alumno.fechaNac}" />
+               <p:outputLabel for="txtMat" value="Materia "/>
+               <p:selectOneMenu id="txtMat" value="#{altaAlumnosFormBean.unaMat}" converter="omnifaces.SelectItemsConverter">
+                   <f:selectItems value="#{altaAlumnosFormBean.listaMats.listaM}" 
+                                  var="mat" itemLabel="#{mat.denom}" itemValue="#{mat}"/>
+               </p:selectOneMenu>
+              
+               
+               <p:commandButton id="btnModificar" value="Modificar" oncomplete="PF('modificar).hide()" ajax="false" 
+                                actionListener="#{altaAlumnosFormBean.modicar()}" update="frmBtn">
+                    <p:confirm header="Pedido de Confirmación" message="¿Confirma Modificar Alumno?" icon="ui-icon-alert"/>
+                    </p:commandButton>
+                    <p:commandButton id="btnCerrarModificarAuto" value="Salir" oncomplete="PF('modificar').hide()"/>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+         <p:dialog id="dlgEliminar" widgetVar="eliminar" header="Eliminación de Alumno" resizable="false" showEffect="explode" hideEffect="explode" modal="true">
+            <h:form id="frmEliminar">
+                <h:panelGrid id="pnlEliminar" columns="2">
+                    <p:outputLabel for="txtcod" value="Codigo"/>
+                    <p:outputLabel id="txtcod" value="#{altaAlumnosFormBean.alIn.cod}"/>
+                    <p:outputLabel for="txtNom" value="Nombre "/>
+                    <p:outputLabel id="txtNom" value="#{altaAlumnosFormBean.alIn.alumno.nombre}"/>
+             <p:outputLabel for="txtAp" value="Apellido "/>
+             <p:outputLabel id="txtAp" value="#{altaAlumnosFormBean.alIn.alumno.apellido}"/>
+             <p:outputLabel for="txtDom" value="Domicilio "/>
+             <p:outputLabel id="txtDom" value="#{altaAlumnosFormBean.alIn.alumno.domicilio}"/>
+             <p:outputLabel for="txtDni" value="DNI "/>
+             <p:outputLabel id="txtDni" value="#{altaAlumnosFormBean.alIn.alumno.DNI}"/>
+              <p:outputLabel for="Fech" value="Año de nacimiento "/>
+              <p:outputLabel for="txtTel" value="Telefono "/>
+              <p:inputNumber id="txtTel" value="#{altaAlumnosFormBean.alIn.alumno.tel}"/> 
+               
+              <p:outputLabel id="Fech"  value="#{altaAlumnosFormBean.alIn.alumno.fechaNac}">
+               <f:convertDateTime pattern="dd/MM/yyyy"/>
+               </p:outputLabel>
+               <p:outputLabel for="txtMat" value="Materia "/>
+               <p:outputLabel id="txtMat" value="#{altaAlumnosFormBean.alIn.materia.denom}" />
+                   
+               <p:commandButton id="btnEliminar" value="Eliminar" ajax="false"
+                                actionListener="#{altaAlumnosFormBean.eliminar()}" 
+                                     oncomplete="PF('eliminar').hide()" update="frmBtn">
+                        <p:confirm header="Pedido de Confirmación" message="¿Confirma Eliminar Electrodomestico?" icon="ui-icon-alert"/>
+                    </p:commandButton>
+                    <p:commandButton id="btnCerrarModificarAuto2" value="Salir" oncomplete="PF('eliminar').hide()"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+             </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
